@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>远行星号吧 逐年帖量（2012–2025）</title>
+<style>
+  :root{
+    --surface-1:#fcfcfb; --page:#f9f9f7;
+    --text-primary:#0b0b0b; --text-secondary:#52514e; --text-muted:#898781;
+    --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,0.10);
+    --series-1:#2a78d6; --series-2:#eb6834;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:where(:not([data-theme="light"])){
+      --surface-1:#1a1a19; --page:#0d0d0d;
+      --text-primary:#f0efec; --text-secondary:#c3c2b7; --text-muted:#898781;
+      --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,0.10);
+      --series-1:#3987e5; --series-2:#d95926;
+    }
+  }
+  :root[data-theme="dark"]{
+    --surface-1:#1a1a19; --page:#0d0d0d;
+    --text-primary:#f0efec; --text-secondary:#c3c2b7; --text-muted:#898781;
+    --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,0.10);
+    --series-1:#3987e5; --series-2:#d95926;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; padding:32px 20px 56px; background:var(--page); color:var(--text-primary);
+    font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+    font-size:14px; line-height:1.6;
+  }
+  .wrap{max-width:900px;margin:0 auto}
+  h1{font-size:19px;font-weight:650;margin:0 0 6px}
+  .sub{color:var(--text-secondary);font-size:13px;margin:0 0 22px}
+  .card{
+    background:var(--surface-1);border:1px solid var(--border);border-radius:10px;
+    padding:18px 18px 12px;margin-bottom:18px;position:relative;
+  }
+  .card h2{font-size:14px;font-weight:600;margin:0 0 2px}
+  .card .note{color:var(--text-muted);font-size:12px;margin:0 0 10px}
+  svg{display:block;width:100%;height:auto;overflow:visible}
+  .tt{
+    position:absolute;pointer-events:none;opacity:0;transition:opacity .1s;
+    background:var(--surface-1);border:1px solid var(--border);border-radius:8px;
+    padding:7px 10px;font-size:12px;line-height:1.5;box-shadow:0 4px 14px rgba(0,0,0,.13);
+    white-space:nowrap;z-index:5;
+  }
+  .tt b{font-weight:650}
+  details{margin-top:10px;border-top:1px solid var(--border);padding-top:8px}
+  summary{cursor:pointer;color:var(--text-secondary);font-size:12px}
+  table{border-collapse:collapse;width:100%;margin-top:8px;font-variant-numeric:tabular-nums}
+  th,td{text-align:right;padding:4px 8px;font-size:12px;border-bottom:1px solid var(--grid)}
+  th:first-child,td:first-child{text-align:left}
+  th{color:var(--text-secondary);font-weight:600}
+  .foot{color:var(--text-muted);font-size:12px;margin-top:20px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>远行星号吧（百度贴吧）逐年帖量</h1>
+  <p class="sub">数据来自公开帖子列表的标题与回复数抓取，覆盖 2012-07 – 2026-08；2026 年为 1–8 月，故不计入对比。</p>
+
+  <div class="card" id="card1">
+    <h2>每年新增帖数</h2>
+    <p class="note">单位：帖。2015 与 2025 两个高点已直接标注。</p>
+    <div class="tt" id="tt1"></div>
+  </div>
+
+  <div class="card" id="card2">
+    <h2>平均每帖回复数</h2>
+    <p class="note">单位：条。与上图同一条时间轴，但度量不同，故单独成图。</p>
+    <div class="tt" id="tt2"></div>
+    <details>
+      <summary>查看数据表</summary>
+      <table id="tbl"><thead><tr><th>年份</th><th>帖数</th><th>总回复</th><th>平均回复</th></tr></thead><tbody></tbody></table>
+    </details>
+  </div>
+
+  <p class="foot">同源数据与统计口径见《四、平台数据》。删帖、隐藏帖无法计入；列表页的"作者"字段不作人物统计之用。</p>
+</div>
+
+<script>
+const DATA = [
+  {y:2012, n:374,  r:3222,  a:8.6},
+  {y:2013, n:567,  r:6355,  a:11.2},
+  {y:2014, n:208,  r:2657,  a:12.8},
+  {y:2015, n:2099, r:34430, a:16.4},
+  {y:2016, n:1045, r:18517, a:17.7},
+  {y:2017, n:837,  r:12869, a:15.4},
+  {y:2018, n:896,  r:15514, a:17.3},
+  {y:2019, n:1066, r:16308, a:15.3},
+  {y:2020, n:1193, r:16345, a:13.7},
+  {y:2021, n:973,  r:12896, a:13.3},
+  {y:2022, n:1635, r:22895, a:14.0},
+  {y:2023, n:1215, r:18276, a:15.0},
+  {y:2024, n:1687, r:21298, a:12.6},
+  {y:2025, n:3048, r:40638, a:13.3}
+];
+
+const W = 860, H = 250, PAD = {t:22, r:16, b:34, l:46};
+const NS = "http://www.w3.org/2000/svg";
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+function el(tag, attrs, parent){
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+
+/* 生成一张单序列柱状图。度量单一，绝不做双轴。 */
+function barChart(cardId, ttId, key, unit, color, format, labelSet){
+  const card = document.getElementById(cardId);
+  const tt = document.getElementById(ttId);
+  const max = Math.max(...DATA.map(d => d[key]));
+  /* 选一个"整数感"好的刻度步长，控制在 4–6 条网格线 */
+  const raw = max / 5;
+  const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const step = [1, 2, 2.5, 5, 10].map(m => m * mag).find(s => max / s <= 6) || 10 * mag;
+  const top = Math.ceil(max / step) * step;
+
+  const iw = W - PAD.l - PAD.r;
+  const ih = H - PAD.t - PAD.b;
+  const band = iw / DATA.length;
+  const bw = Math.max(6, band - 1.5);          // 相邻柱之间留出表面缝隙
+
+  const y = v => PAD.t + ih - (v / top) * ih;
+
+  const svg = el("svg", {viewBox:`0 0 ${W} ${H}`, role:"img",
+    "aria-label":"逐年数据柱状图"});
+  const det = card.querySelector("details");
+  if (det) card.insertBefore(svg, det); else card.appendChild(svg);
+
+  /* 网格与刻度（弱化处理） */
+  for (let v = 0; v <= top; v += step){
+    el("line", {x1:PAD.l, x2:W-PAD.r, y1:y(v), y2:y(v),
+      stroke: v === 0 ? css("--axis") : css("--grid"), "stroke-width":1}, svg);
+    const t = el("text", {x:PAD.l-8, y:y(v)+4, "text-anchor":"end",
+      fill:css("--text-muted"), "font-size":11}, svg);
+    t.textContent = format(v);
+  }
+
+  DATA.forEach((d, i) => {
+    const x = PAD.l + i * band + (band - bw) / 2;
+    const h = Math.max(2, (d[key] / top) * ih);
+    const rect = el("rect", {
+      x, y:y(d[key]), width:bw, height:h, rx:4,   // 数据端 4px 圆角
+      fill:color, tabindex:0, role:"listitem",
+      "aria-label":`${d.y} 年 ${format(d[key])}${unit}`
+    }, svg);
+    /* 圆角只应出现在数据端：用矩形补下方两角 */
+    el("rect", {x, y:y(d[key]) + Math.min(h,4), width:bw, height:Math.max(0,h-4),
+      fill:color}, svg);
+
+    const lab = el("text", {x:PAD.l + i*band + band/2, y:H-PAD.b+18,
+      "text-anchor":"middle", fill:css("--text-muted"), "font-size":11}, svg);
+    lab.textContent = d.y;
+
+    if (labelSet.has(d.y)){          // 仅对关键点直接标注
+      const lp = el("text", {x:PAD.l + i*band + band/2, y:y(d[key])-7,
+        "text-anchor":"middle", fill:css("--text-primary"),
+        "font-size":12, "font-weight":650}, svg);
+      lp.textContent = format(d[key]);
+    }
+
+    const show = ev => {
+      tt.innerHTML = `<b>${d.y} 年</b><br>${format(d[key])} ${unit}`
+        + `<br><span style="color:var(--text-secondary)">总回复 ${d.r.toLocaleString()}</span>`;
+      const r = card.getBoundingClientRect();
+      const ex = ev && ev.clientX ? ev.clientX - r.left : (x + bw/2);
+      tt.style.left = Math.min(Math.max(ex - 40, 8), r.width - 150) + "px";
+      tt.style.top  = Math.max((ev && ev.clientY ? ev.clientY - r.top : y(d[key])) - 62, 6) + "px";
+      tt.style.opacity = 1;
+    };
+    const hide = () => tt.style.opacity = 0;
+    ["mousemove","mouseenter"].forEach(e => rect.addEventListener(e, show));
+    rect.addEventListener("mouseleave", hide);
+    rect.addEventListener("focus", () => show(null));
+    rect.addEventListener("blur", hide);
+  });
+}
+
+function draw(){
+  document.querySelectorAll("#card1 svg,#card2 svg").forEach(s => s.remove());
+  barChart("card1", "tt1", "n", "帖", css("--series-1"), v => v.toLocaleString(),
+           new Set([2015, 2025]));
+  barChart("card2", "tt2", "a", "条", css("--series-2"), v => v.toFixed(0),
+           new Set([2016, 2024]));
+}
+
+const tb = document.querySelector("#tbl tbody");
+DATA.forEach(d => {
+  const tr = document.createElement("tr");
+  tr.innerHTML = `<td>${d.y}</td><td>${d.n.toLocaleString()}</td>`
+               + `<td>${d.r.toLocaleString()}</td><td>${d.a.toFixed(1)}</td>`;
+  tb.appendChild(tr);
+});
+
+draw();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", draw);
+new MutationObserver(draw).observe(document.documentElement,
+  {attributes:true, attributeFilter:["data-theme"]});
+</script>
+</body>
+</html>
