@@ -1,0 +1,41 @@
+name: 纠错 —— 这条记错了
+description: 史实、时间、人名、帖号有误，或有更准确的来源
+title: "[纠错] "
+labels: ["纠错"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        谢谢你来核对。**指出错误本身就是对这个项目最大的帮助。**
+  - type: input
+    id: where
+    attributes:
+      label: 在哪一章 / 哪个文件
+      placeholder: 例：01-社区时间线.md 「2015」那一段
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: 原文怎么写的
+      description: 直接复制那一句即可
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: correct
+    attributes:
+      label: 应该是什么 / 依据是什么
+      description: 有帖号或链接最好；没有也没关系，写清你的依据就行
+    validations:
+      required: true
+  - type: dropdown
+    id: certainty
+    attributes:
+      label: 你的把握
+      options:
+        - 我很确定，有依据
+        - 我印象是这样，但没找依据
+        - 存疑，只是觉得不对
+    validations:
+      required: true

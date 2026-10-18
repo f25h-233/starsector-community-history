@@ -1,0 +1,45 @@
+name: 补料 —— 我知道清单里那一条
+description: 手上有「未解之谜」清单里的材料，或能补充任何缺漏
+title: "[补料] "
+labels: ["补料"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        先看一眼 [06-未解之谜.md](https://github.com/f25h-233/starsector-community-history/blob/master/06-未解之谜.md)，看看你手上的东西对应哪一条。
+        **不确定归哪一条也没关系，直接写。**
+  - type: input
+    id: item
+    attributes:
+      label: 对应清单里哪一条（如果不确定就留空）
+      placeholder: 例：A1 贴吧初创期的吧主序列
+    validations:
+      required: false
+  - type: textarea
+    id: content
+    attributes:
+      label: 材料内容
+      description: |
+        帖号、链接、原文、老截图说明都可以。
+        ⚠️ 请注意：**不要贴账号编号、QQ 号、群号、联系方式；不要提供盗版或授权绕过的途径；不要贴私人聊天记录（除非当事双方都同意）。**
+      render: text
+    validations:
+      required: true
+  - type: dropdown
+    id: source
+    attributes:
+      label: 来源类型
+      options:
+        - 公开帖 / 公开页面（有帖号或链接）
+        - 我亲历（口述）
+        - 本地存档（老截图 / 老文件）
+        - 别人转述
+    validations:
+      required: true
+  - type: checkboxes
+    id: ack
+    attributes:
+      label: 确认
+      options:
+        - label: 我知道口述类内容会被标为「口述」，与书面记录分开标注
+          required: false

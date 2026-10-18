@@ -1,0 +1,37 @@
+name: 请求删除 / 修改涉及我的内容
+description: 你是被提及者，希望某条内容删除或改写
+title: "[请求删除] "
+labels: ["隐私"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **这类请求优先处理，且不需要你说明理由。**
+
+        ⚠️ 因为 Issue 是公开的，**这里请不要写任何细节** —— 只要指出是哪一条，我们会照办。
+        如果你愿意说的更多，可以只说"不便公开说明"。
+  - type: input
+    id: where
+    attributes:
+      label: 哪一条
+      description: 文件 + 大致位置即可，不用复制内容
+      placeholder: 例：data/tb-index.csv 里 tid 123456 那行
+    validations:
+      required: true
+  - type: dropdown
+    id: action
+    attributes:
+      label: 希望怎么处理
+      options:
+        - 完全删除
+        - 改写（去掉指向我的部分）
+        - 只去掉我的昵称
+    validations:
+      required: true
+  - type: checkboxes
+    id: ack
+    attributes:
+      label: 确认
+      options:
+        - label: 我知道不需要提供理由
+          required: false
